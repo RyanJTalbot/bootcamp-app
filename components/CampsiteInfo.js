@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import {Text, View, ShadowPropTypesIOS} from "react-native";
-import { Card } from "react-native-elements";
+import {Text, View, FlatList, ScrollView} from "react-native";
+import { Card, Icon } from "react-native-elements";
 import { CAMPSITES } from "../shared/campsites";
+import { COMMENTS } from "../shared/comments";
 
 
-
-function RenderCampsite({campsite}){
+function RenderCampsite({campsite, favorite, markFavorite}){
     if(campsite){
         return (
             <Card 
@@ -13,6 +13,15 @@ function RenderCampsite({campsite}){
                 image={require("./images/react-lake.jpg")}
             >
                 <Text style={{margin:10}}> {campsite.description} </Text> 
+                <Icon
+                    name={favorite ? 'heart' : 'heart-o'}
+                    type='font-awesome'
+                    color='#f50'
+                    raised
+                    reverse
+                    onPress={() => favorite ? 
+                        console.log('Already set as a favorite') : markFavorite()}
+                />
             </Card>
 
         )
@@ -22,15 +31,44 @@ function RenderCampsite({campsite}){
 }
 
 
+function RenderComments({comments}) {
+
+    const renderCommentItem = ({item}) => {
+        return (
+            <View style={{margin: 10}}>
+                <Text style={{fontSize: 14}}>{item.text}</Text>
+                <Text style={{fontSize: 12}}>{item.rating} Stars</Text>
+                <Text style={{fontSize: 12}}>{`-- ${item.author}, ${item.date}`}</Text>
+            </View>
+        );
+    };
+
+    return (
+        <Card title="Comments">
+            <FlatList
+                data={comments}
+                renderItem={renderCommentItem}
+                keyExtractor={item => item.id.toString()}
+            />
+        </Card>
+    );
+}
+
 export default class campsiteInfo extends Component {
 
     constructor(props){
         super(props);
         this.state = {
-            campsites: CAMPSITES
+            campsites: CAMPSITES,
+            comments: COMMENTS,
+            favorite: false
         }
     }
 
+    markFavorite() {
+        this.setState({favorite: true});
+    }
+    
     static navigationOptions = {
         tilte:"Campsite Information"
     }
@@ -38,7 +76,16 @@ export default class campsiteInfo extends Component {
     render() {
         const campsiteId = this.props.navigation.getParam("campsiteId");
         const campsite = this.state.campsites.filter( camp => camp.id == campsiteId)[0];
+        const comments = this.state.comments.filter( comment => comment.campsiteId == campsiteId);
 
-        return <RenderCampsite campsite={campsite} />
+        return (
+            <ScrollView>
+                <RenderCampsite campsite={campsite} 
+                    favorite={this.state.favorite}
+                    markFavorite={() => this.markFavorite()}
+                />
+                <RenderComments comments={comments} />
+            </ScrollView>
+        );
     }
 }
