@@ -133,8 +133,6 @@ const CustomDrawerContentComponent = props => (
 );
 
 
-
-
 const MainNavigator = createDrawerNavigator(
     {
         Home: {
