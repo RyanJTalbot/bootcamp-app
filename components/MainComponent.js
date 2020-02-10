@@ -9,6 +9,8 @@ import { Icon } from "react-native-elements";
 
 import Directory from "./DirectoryComponent";
 import Home from "./HomeComponent";
+import About from "./AboutComponent";
+import Contact from "./ContactComponent";
 import CampsiteInfo from "./CampsiteInfo";
 
 
@@ -60,14 +62,6 @@ const HomeNavigator = createStackNavigator(
         })
     }
 )
-
-function About(){
-    return <View/>
-}
-
-function Contact(){
-    return <View/>
-}
 
 const AboutNavigator = createStackNavigator(
     {
