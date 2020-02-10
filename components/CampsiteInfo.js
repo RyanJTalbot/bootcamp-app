@@ -22,6 +22,7 @@ function RenderCampsite({campsite}){
 }
 
 
+
 export default class campsiteInfo extends Component {
 
     constructor(props){
