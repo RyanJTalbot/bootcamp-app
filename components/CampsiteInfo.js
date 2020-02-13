@@ -5,12 +5,13 @@ import { Card, Icon } from "react-native-elements";
 import { baseUrl } from "./../shared/baseUrl";
 import { connect } from "react-redux";
 
+import {postFavorite} from "../redux/ActionCreators";
+
 function RenderCampsite({campsite, favorite, markFavorite}){
     if(campsite){
         return (
             <Card 
                 featuredTitle={campsite.name}
-                // image={require("./images/react-lake.jpg")}
                 image={{uri: baseUrl + campsite.image}}
             >
                 <Text style={{margin:10}}> {campsite.description} </Text> 
@@ -55,23 +56,9 @@ function RenderComments({comments}) {
     );
 }
 
-
-
-const mapStateToProps = (state) => {
-    return {
-        campsites: state.campsites,
-        comments: state.comments
-    }
-}
-
-
 class campsiteInfo extends Component {
 
-    state = {
-        favorite: false
-    }
-
-    markFavorite = () => this.setState({favorite: true}); 
+    markFavorite = campsiteId => this.props.postFavorite(campsiteId); 
     
     static navigationOptions = {
         tilte:"Campsite Information"
@@ -85,8 +72,8 @@ class campsiteInfo extends Component {
         return (
             <ScrollView>
                 <RenderCampsite campsite={campsite} 
-                    favorite={this.state.favorite}
-                    markFavorite={this.markFavorite}
+                    favorite={this.props.favorites.includes(campsiteId)}
+                    markFavorite={() => this.markFavorite(campsiteId)}
                 />
                 <RenderComments comments={comments} />
             </ScrollView>
@@ -94,4 +81,17 @@ class campsiteInfo extends Component {
     }
 }
 
-export default connect(mapStateToProps)(campsiteInfo);
+const mapStateToProps = (state) => {
+    return {
+        campsites: state.campsites,
+        comments: state.comments,
+        favorites: state.favorites
+    }
+}
+
+
+const mapDispatchToProps = {
+    postFavorite: campsiteId => postFavorite(campsiteId)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(campsiteInfo);

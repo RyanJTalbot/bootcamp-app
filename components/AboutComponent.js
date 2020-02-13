@@ -3,6 +3,8 @@ import React, { Component} from "react";
 import  {ScrollView, Text, FlatList} from "react-native";
 import  {Card, ListItem} from "react-native-elements";
 
+import Loading from "./LoadingComponent";
+
 import { baseUrl } from "./../shared/baseUrl";
 import { connect } from "react-redux";
 
@@ -43,11 +45,34 @@ class About extends Component {
                 <ListItem
                     title={item.name}
                     subtitle={item.description}
-                    // leftAvatar={{ source: require("./images/bootstrap-logo.png")}}
                     leftAvatar={{ source: {uri: baseUrl + item.image} }}
                 />
             );
         };
+
+        // if component Loading
+        if(this.props.partners.isLoading){
+            return (
+                <ScrollView>
+                    <Mission />
+                    <Card title="Community Partners">
+                        <Loading />
+                    </Card>
+                </ScrollView>
+            );
+        }
+
+        // if component Error
+        if(this.props.partners.errMess){
+            return (
+                <ScrollView>
+                    <Mission />
+                    <Card title="Community Partners">
+                    <Text>{this.props.partners.errMess}</Text>
+                    </Card>
+                </ScrollView>
+            );
+        }
 
         return (
             <ScrollView>

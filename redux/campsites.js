@@ -15,6 +15,6 @@ export const campsites = (state=defaultState , action) => {
             return {...state, isLoading: false, errMess: action.payload};
 
         default:
-          return state;
+            return state;
       }
 };

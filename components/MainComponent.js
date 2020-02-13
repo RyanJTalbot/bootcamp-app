@@ -207,7 +207,7 @@ const MainNavigator = createDrawerNavigator(
 
 class Main extends Component {
     componentDidMount(){
-
+        // fetch everything and store it in the state when app starts
         this.props.fetchCampsites();
         this.props.fetchComments();
         this.props.fetchPromotions();
