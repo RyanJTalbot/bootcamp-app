@@ -27,6 +27,13 @@ export const commentsFailed = errMess => ({
 });
 
 
+export const deleteFavorite = (campsiteId) => ({
+    type: ActionTypes.DELETE_FAVORITE,
+    payload: campsiteId
+});
+
+
+
 export const postComment = (comment) => dispatch =>{
     setTimeout(()=> dispatch(addComment(comment)), 2000);
 }
