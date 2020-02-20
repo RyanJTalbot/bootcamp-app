@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { View, Text, FlatList } from "react-native";
 import { Tile } from "react-native-elements";
+import { connect } from "react-redux";
+import * as Animatable from 'react-native-animatable';
 
 import Loading from "./LoadingComponent";
-
 import { baseUrl } from "../shared/baseUrl";
-import { connect } from "react-redux";
 
 
 const mapStateToPorps = (state) => {
@@ -39,13 +39,15 @@ class Directory extends Component{
 
         const renderDirectoryItem = ({item}) => {
             return (
-                <Tile
-                    title={item.name}
-                    caption={item.description}
-                    featured
-                    onPress={() => navigate("CampsiteInfo", {campsiteId: item.id})}
-                    imageSrc={{uri: baseUrl + item.image}}
-                />
+                <Animatable.View animation='fadeInRightBig' duration={2000}>
+                    <Tile
+                        title={item.name}
+                        caption={item.description}
+                        featured
+                        onPress={() => navigate("CampsiteInfo", {campsiteId: item.id})}
+                        imageSrc={{uri: baseUrl + item.image}}
+                    />
+                </Animatable.View>
             );
         };
 
