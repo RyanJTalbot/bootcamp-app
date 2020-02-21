@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {Text, View, FlatList, ScrollView} from "react-native";
 import { Card, Icon, Rating, Input } from 'react-native-elements';
-import { Modal, Button, StyleSheet } from 'react-native';
+import { Modal, Button, StyleSheet, Alert, PanResponder } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
 import { baseUrl } from "./../shared/baseUrl";
@@ -10,9 +10,41 @@ import { connect } from "react-redux";
 import {postFavorite, postComment} from "../redux/ActionCreators";
 
 function RenderCampsite({campsite, favorite, markFavorite, showModal}){
+
+    // GESTURE SUPPORT
+    const recognizeDrag = ({dx}) => (dx < -200) ? true:false;
+    const panResponder = PanResponder.create({
+
+        onStartShouldSetPanResponder: () => true,
+        onPanResponderEnd: (e, gestureState) => {
+            console.log('pan responder end', gestureState);
+            if(recognizeDrag(gestureState)){
+                Alert.alert(
+                    "Add Favorite",
+                    "Are you sure you wish to add " + campsite + " to favorites?",
+                     [
+                        {
+                            text: 'Cancel',
+                            style: 'cancel',
+                            onPress: () => console.log('Cancel Pressed')
+                        },
+                        {
+                            text: 'OK',
+                            onPress: () => favorite ?
+                            console.log('Already set as a favorite') : markFavorite()
+                        }
+                    ],
+                    { cancelable: false }
+                );
+            }
+            return true;
+        }
+    });
+
+
     if(campsite){
         return (
-            <Animatable.View animation='fadeInDown' duration={2000} delay={1000}>
+            <Animatable.View animation='fadeInDown' duration={2000} delay={1000} {...panResponder.panHandlers}>
                 <Card 
                     featuredTitle={campsite.name}
                     image={{uri: baseUrl + campsite.image}}
