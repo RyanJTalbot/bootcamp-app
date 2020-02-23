@@ -15,6 +15,7 @@ function RenderCampsite({campsite, favorite, markFavorite, showModal}){
     const view = React.createRef();
     
     const recognizeDrag = ({dx}) => (dx < -200) ? true:false;
+    const recognizeComment = ({dx}) => (dx > 200) ? true:false;
     const panResponder = PanResponder.create({
 
         onStartShouldSetPanResponder: () => true,
@@ -42,7 +43,10 @@ function RenderCampsite({campsite, favorite, markFavorite, showModal}){
                     ],
                     { cancelable: false }
                 );
+            } else if(recognizeComment(gestureState)){
+                showModal();
             }
+
             return true;
         }
     });
