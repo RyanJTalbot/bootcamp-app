@@ -1,0 +1,130 @@
+
+import React, { Component } from "react";
+import { View, Button, StyleSheet } from "react-native";
+import { Input, CheckBox } from "react-native-elements";
+import * as SecureStore from "expo-secure-store";
+
+
+
+class Login extends Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            username:"",
+            password:"",
+            remember: false
+        };
+
+    }
+
+
+    static navigationOptions = {
+        title: "Login"
+    }
+
+
+    componentDidMount(){
+        SecureStore.getItemAsync("userInfo")
+            .then(userData =>{
+                const userInfo = JSON.parse(userData);
+                if(userInfo){
+                     // No Good!
+                     // this.setState({username: userInfo.username});
+                     // this.setState({password: userInfo.password});
+                     // this.setState({remember: true})
+                     this.setState({
+                         username: userInfo.username, 
+                         password: userInfo.password, 
+                         remember: true
+                    });
+                }
+            });
+    }
+
+
+
+    handleLogin(){
+
+        console.log(JSON.stringify(this.state));
+
+        if(this.state.remember){
+            SecureStore.setItemAsync("userInfo", JSON.stringify(
+                    {username: this.state.username, password: this.state.password}
+                )
+            ).catch(err => console.log("couldn't save user Info", err));
+        }else{
+            SecureStore.deleteItemAsync("userInfo")
+                .catch(error => console.log("Could not delete user info", error));
+        }
+    }
+
+
+    render(){
+
+        return(
+
+            <View style={styles.container}>
+                <Input
+                    placeholder="Username"
+                    leftIcon={{type: "font-awesome", name: "user-o"}}
+                    onChangeText={username => this.setState({username})}
+                    value={this.state.username}
+                    containerStyle={styles.formInput}
+                    leftIconContainerStyle={styles.formIcon}
+                />
+                <Input
+                    placeholder="Password"
+                    leftIcon={{type: "font-awesome", name: "key"}}
+                    onChangeText={password => this.setState({password})}
+                    value={this.state.password}
+                    containerStyle={styles.formInput}
+                    leftIconContainerStyle={styles.formIcon}
+                />
+                <CheckBox
+                    title="Remember Me"
+                    center
+                    checked={this.state.remember}
+                    onPress={() => this.setState({remember: !this.state.remember})}
+                    containerStyle={styles.formCheckbox}
+                />
+                <View style={styles.formButton}>
+                    <Button
+                        onPress={() => this.handleLogin()}
+                        title="Login"
+                        color="#5637DD"
+                    />
+                </View>
+            </View>
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+    container: {
+        justifyContent: "center",
+        margin: 20
+    },
+    formIcon: {
+        marginRight: 10
+    },
+    formInput: {
+        padding: 10
+    },
+    formCheckbox: {
+        margin: 10,
+        backgroundColor: null
+    },
+    formButton: {
+        margin: 40
+    }
+});
+
+export default Login;
+
+
+
+
+
+
+
