@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import { FlatList, View, Text, Alert } from "react-native";
 import { ListItem } from "react-native-elements";
